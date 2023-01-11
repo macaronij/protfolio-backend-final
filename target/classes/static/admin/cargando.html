@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>cargando</title>
+</head>
+<body>
+    <a href="../seleccionar.html" class="boton">INICIO</a>
+    <a href="mostrar.html" class="boton">VER TABLAS</a>
+    
+    <h1>CARGAR EN TABLAS</h1>
+    <form action="/cargando/persona">
+        <h3>Persona</h3>
+        <input type="text" name="nombre" placeholder="Nombre">
+        <button  class="boton" type="submit">cargar persona</button>
+    </form>
+
+    <form action="/cargando/educacion">
+        <h3>Educacion</h3>
+        <select name="idPersona" class="personaSelect">
+
+        </select>
+        <input type="text" name="titulo" placeholder="Titulo">
+        <input type="text" name="texto" placeholder="Texto">
+        <input type="text" name="foto" placeholder="Foto">
+        <button class="boton" type="submit">cargar educacion</button>
+    </form>
+
+    <form action="/cargando/about">
+        <h3>Sobre mi</h3>
+        <select name="idPersona" class="personaSelect"></select>
+        <input type="text" name="titulo" placeholder="Titulo">
+        <input type="text" name="texto" placeholder="Texto">
+        <button class="boton" type="submit">cargar sobre mi</button>
+    </form>
+
+    <form action="/cargando/admin">
+        <h3>Admin</h3>
+        <select name="idPersona" class="personaSelect"></select>
+        <select name="condicion" class="personaSelect">
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+        </select>
+        
+        <button class="boton" type="submit">cargar sobre mi</button>
+    </form>
+
+    <form action="/cargando/contact">
+        <h3>Contacto</h3>
+        <select name="idPersona" class="personaSelect"></select>
+        <input type="text" name="profesion" placeholder="profesion">
+        <input type="text" name="telefono" placeholder="Telefono">
+        <input type="text" name="direccion" placeholder="Direccion">
+        <input type="text" name="email" placeholder="Email">
+        <input type="text" name="foto" placeholder="Foto">
+        <button class="boton" type="submit">cargar contacto</button>
+    </form>
+
+    <form action="/cargando/proyect">
+        <h3>Proyectos</h3>
+        <select name="idPersona" class="personaSelect"></select>
+        <input type="text" name="titulo" placeholder="Titulo">
+        <input type="text" name="texto" placeholder="Texto">
+        <input type="text" name="foto" placeholder="Foto">
+        <input type="text" name="enlace" placeholder="Enlace web (opcional)">
+        <button class="boton" type="submit">cargar proyecto</button>
+    </form>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="cargando.js"></script>
+
+</html>
