@@ -1,30 +1,33 @@
 let persons = document.getElementById("person")
 persons.innerHTML="";
+let listaPersonas = [];
+let id;
 
 axios.get("/api/persons").then(
     json => {
         let datos = json.data._embedded.persons;
-        // console.log("PERSONS: "+datos);
         persons.innerHTML += '<div class="container titulo"><div>ID</div><div>Nombre</div></div>'
         for (linea of datos) {
             persons.innerHTML += '<div class="container"><div>'+linea.id+'</div><div>'+linea.nombre+'</div><div class="basura"><a href="/basededatos/borrar/person/'+linea.id+'"><img src="/img/basura.png"></div></div>'
+            listaPersonas.push({"id":linea.id,"nombre":linea.nombre })
         }   
     }
 )
-
 let educations = document.getElementById("education")
 educations.innerHTML="";
 
-axios.get("/api/educations").then(
+axios.get("http://localhost:8080/basededatos/educations").then(
     json => {
-        let datos = json.data._embedded.educations;
-        // console.log(datos)
+        let datos = json.data;
+        console.log(datos)
         educations.innerHTML += '<div class="container titulo"><div>Persona</div><div>Organismo</div><div>descripcion</div><div>foto</div></div>'
         for (linea of datos) {
-                    educations.innerHTML += '<div class="container"><div>persona</div><div>'+linea.titulo+'</div> <div>'+linea.texto+'</div><div>'+linea.foto+'</div><div class="basura"><a href="/basededatos/borrar/education/'+linea.id+'"><img src="/img/basura.png"></div></div>'
-        }       
+            console.log(linea.persona)
+            educations.innerHTML += '<div class="container"><div>'+linea.persona.nombre+'</div><div>'+linea.titulo+'</div> <div>'+linea.texto+'</div><div>'+linea.foto+'</div><div class="basura"><a href="/basededatos/borrar/education/'+linea.id+'"><img src="/img/basura.png"></div></div>'
+        }
     }
 )
+
 
 let about = document.getElementById("about")
 about.innerHTML="";

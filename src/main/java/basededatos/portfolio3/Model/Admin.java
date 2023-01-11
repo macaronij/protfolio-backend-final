@@ -17,15 +17,11 @@ public class Admin {
     @ManyToOne
     private Person persona;
 
-    private Condicion condicion;
+    private String password;
 
-    public static enum Condicion {
-        USER, ADMIN
-    }
-
-    public Admin(Condicion condicion, Person persona) {
+    public Admin(String password, Person persona) {
         this.persona = persona;
-        this.condicion = condicion;
+        this.password = password;
     }
 
     public Admin() {

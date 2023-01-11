@@ -1,26 +1,30 @@
 package basededatos.portfolio3.Controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 import basededatos.portfolio3.Model.About;
-import basededatos.portfolio3.Model.Admin;
-import basededatos.portfolio3.Model.Contact;
+
 import basededatos.portfolio3.Model.Education;
+import basededatos.portfolio3.Model.Message;
 import basededatos.portfolio3.Model.Person;
 import basededatos.portfolio3.Model.Proyect;
 import basededatos.portfolio3.Repository.AboutRepository;
 import basededatos.portfolio3.Repository.AdminRepository;
 import basededatos.portfolio3.Repository.ContactRepository;
 import basededatos.portfolio3.Repository.EducationRepository;
+import basededatos.portfolio3.Repository.MessageRepository;
 import basededatos.portfolio3.Repository.PersonRepository;
 import basededatos.portfolio3.Repository.ProyectRepository;
 
 @Slf4j
-@Controller
-@RequestMapping(path = "/cargando")
+@RestController
+@RequestMapping(path = "/cargando", produces="application/json")
+@CrossOrigin(origins = "*")
 public class cargandoController {
     PersonRepository personRepo;
     EducationRepository educationRepo;
@@ -28,99 +32,103 @@ public class cargandoController {
     AdminRepository adminRepo;
     ContactRepository contactRepo;
     ProyectRepository proyectRepo;
+    MessageRepository messageRepo;
 
-    cargandoController(PersonRepository _personRepo, EducationRepository _educactionRepo, AboutRepository _aboutRepo, AdminRepository _adminRepo, ContactRepository _contactRepo, ProyectRepository _proyectRepo) {
+    cargandoController(PersonRepository _personRepo, EducationRepository _educactionRepo, AboutRepository _aboutRepo, AdminRepository _adminRepo, ContactRepository _contactRepo, ProyectRepository _proyectRepo, MessageRepository _messageRepo) {
         personRepo = _personRepo;
         educationRepo = _educactionRepo;
         aboutRepo = _aboutRepo;
         adminRepo = _adminRepo;
         contactRepo = _contactRepo;
         proyectRepo = _proyectRepo;
+        messageRepo = _messageRepo;
     }
 
-    @GetMapping(value="/persona")
-    public String cargaPersona(String nombre) {
-        if (nombre == null || nombre.isEmpty()) {
-            log.info("no se encontro un nombre para cargar, volviendo a mostrar.html");
-            return "redirect:/admin/mostrar.html";
-        }
-        log.info("Guardando Persona "+nombre+" en la base de datos PERSON");
-        personRepo.save(new Person(nombre));
-        return "redirect:/admin/mostrar.html";
-    }
+    // @GetMapping(value="/persona")
+    // public String cargaPersona(String nombre) {
+    //     if (nombre == null || nombre.isEmpty()) {
+    //         log.info("no se encontro un nombre para cargar, volviendo a mostrar.html");
+    //         return "redirect:/admin/mostrar.html";
+    //     }
+    //     log.info("Guardando Persona "+nombre+" en la base de datos PERSON");
+    //     personRepo.save(new Person(nombre));
+    //     return "redirect:/admin/mostrar.html";
+    // }
 
-    @GetMapping("/educacion")
-    public String cargaEducacion(String foto, String titulo, String texto, String idPersona) {
-        log.info("Cargando EDUCACION de ID: "+idPersona);
-        Long id = Long.parseLong(idPersona);
-        if (personRepo.existsById(id)) {
-            Person persona = personRepo.findById(id).get();
+    @PostMapping("/educacion")
+    public Boolean cargaEducacion(@RequestBody Education datos) {
+        log.info("Cargando EDUCACION");
+        log.info("id recibido: "+datos.getTitulo());
+        log.info("id recibido: "+datos.getId());
+        if (personRepo.existsById(datos.getId())) {
+            Person persona = personRepo.findById(datos.getId()).get();
             log.info("Cargando EDUCACION de Persona: "+persona.getNombre());
-            educationRepo.save(new Education(foto, titulo, texto, persona));
+            log.info("foto: "+datos.getFoto()+" titulo: "+datos.getTitulo()+" datos: "+datos.getTexto()+" persona: "+ persona.getNombre());
+            Education edu = new Education(datos.getFoto(), datos.getTitulo(),datos.getTexto(), persona);
+            log.info("objeto edu creado");
+            educationRepo.save(edu);
         } else {
-            log.info("ID: "+idPersona+" no encontrado en tabla persona");
-            return "redirect:/admin/errorpersona.html";
+            log.info("ID: "+datos.getId()+" no encontrado en tabla persona");
+            return false;
         }
-        return "redirect:/admin/mostrar.html";
+        return true;
+    }
+    
+    @PostMapping("/message")
+    public Boolean cargaMensaje(@RequestBody Message datos) {
+        log.info("Cargando MENSAJE");
+        if (personRepo.existsById(datos.getId())) {
+            Person persona = personRepo.findById(datos.getId()).get();
+            log.info("Guardando MENSAJE para "+persona.getNombre());
+            log.info(datos.getEmail());
+            messageRepo.save(new Message(datos.getNombre(), datos.getEmail(), datos.getMensaje(), persona));
+        } else {
+            log.info("ID: "+datos.getId()+" no encontrado en tabla persona");
+            return false;
+        }
+        return true;
     }
 
-    @GetMapping("/about")
-    public String cargaAbout(String titulo, String texto, String idPersona) {
-        log.info("Cargando ABOUT de ID: "+idPersona);
-        Long id = Long.parseLong(idPersona);
-        if (personRepo.existsById(id)) {
-            Person persona = personRepo.findById(id).get();
+    @PostMapping("/about")
+    public Boolean cargaAbaout(@RequestBody About datos) {
+        log.info("Cargando ABOUT");
+        if (personRepo.existsById(datos.getId())) {
+            Person persona = personRepo.findById(datos.getId()).get();
             log.info("Cargando ABOUT de Persona: "+persona.getNombre());
-            aboutRepo.save(new About(titulo, texto, persona));
+            aboutRepo.save(new About(datos.getTitulo(), datos.getTexto(),persona ));
         } else {
-            log.info("ID: "+idPersona+" no encontrado en tabla persona");
-            return "redirect:/admin/errorpersona.html";
+            log.info("ID: "+datos.getId()+" no encontrado en tabla persona");
+            return false;
         }
-        return "redirect:/admin/mostrar.html";
+        return true;
     }
 
-    @GetMapping("/admin")
-    public String cargaAdmin(Admin.Condicion condicion, String idPersona) {
-        log.info("Cargando ADMIN de ID: "+idPersona);
-        Long id = Long.parseLong(idPersona);
-        if (personRepo.existsById(id)) {
-            Person persona = personRepo.findById(id).get();
-            log.info("Cargando ADMIN de Persona: "+persona.getNombre());
-            adminRepo.save(new Admin(condicion, persona));
-        } else {
-            log.info("ID: "+idPersona+" no encontrado en tabla persona");
-            return "redirect:/admin/errorpersona.html";
-        }
-        return "redirect:/admin/mostrar.html";
-    }
+    // @GetMapping("/contact")
+    // public String cargaContact(String telefono, String direccion, String email, String profesion, String foto, String idPersona) {
+    //     log.info("Cargando CONTACT de ID: "+idPersona);
+    //     Long id = Long.parseLong(idPersona);
+    //     if (personRepo.existsById(id)) {
+    //         Person persona = personRepo.findById(id).get();
+    //         log.info("Cargando COPNTACT de Persona: "+persona.getNombre());
+    //         contactRepo.save(new Contact(telefono, direccion, email, profesion, foto, persona));
+    //     } else {
+    //         log.info("ID: "+idPersona+" no encontrado en tabla persona");
+    //         return "redirect:/admin/errorpersona.html";
+    //     }
+    //     return "redirect:/admin/mostrar.html";
+    // }
 
-    @GetMapping("/contact")
-    public String cargaContact(String telefono, String direccion, String email, String profesion, String foto, String idPersona) {
-        log.info("Cargando CONTACT de ID: "+idPersona);
-        Long id = Long.parseLong(idPersona);
-        if (personRepo.existsById(id)) {
-            Person persona = personRepo.findById(id).get();
-            log.info("Cargando COPNTACT de Persona: "+persona.getNombre());
-            contactRepo.save(new Contact(telefono, direccion, email, profesion, foto, persona));
+    @PostMapping("/proyect")
+    public Boolean cargaPro(@RequestBody Proyect datos) {
+        log.info("Cargando PROYECTO");
+        if (personRepo.existsById(datos.getId())) {
+            Person persona = personRepo.findById(datos.getId()).get();
+            log.info("Cargando PROYECTO de Persona: "+persona.getNombre());
+            proyectRepo.save(new Proyect(datos.getFoto(), datos.getTitulo(), datos.getTexto(), datos.getEnlace(), persona));
         } else {
-            log.info("ID: "+idPersona+" no encontrado en tabla persona");
-            return "redirect:/admin/errorpersona.html";
+            log.info("ID: "+datos.getId()+" no encontrado en tabla persona");
+            return false;
         }
-        return "redirect:/admin/mostrar.html";
-    }
-
-    @GetMapping("/proyect")
-    public String cargaProyect(String foto, String titulo, String texto, String enlace, String idPersona) {
-        log.info("Cargando PROYECT de ID: "+idPersona);
-        Long id = Long.parseLong(idPersona);
-        if (personRepo.existsById(id)) {
-            Person persona = personRepo.findById(id).get();
-            log.info("Cargando PROYECT de Persona: "+persona.getNombre());
-            proyectRepo.save(new Proyect(foto, titulo, texto, enlace, persona));
-        } else {
-            log.info("ID: "+idPersona+" no encontrado en tabla persona");
-            return "redirect:/admin/errorpersona.html";
-        }
-        return "redirect:/admin/mostrar.html";
+        return true;
     }
 }

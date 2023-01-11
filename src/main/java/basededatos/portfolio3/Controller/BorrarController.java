@@ -1,21 +1,24 @@
 package basededatos.portfolio3.Controller;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 import basededatos.portfolio3.Repository.AboutRepository;
 import basededatos.portfolio3.Repository.AdminRepository;
 import basededatos.portfolio3.Repository.ContactRepository;
 import basededatos.portfolio3.Repository.EducationRepository;
+import basededatos.portfolio3.Repository.MessageRepository;
 import basededatos.portfolio3.Repository.PersonRepository;
 import basededatos.portfolio3.Repository.ProyectRepository;
 
 @Slf4j
-@Controller
-@RequestMapping("basededatos/borrar")
+@RestController
+@RequestMapping(path = "basededatos/borrar", produces="application/json")
+@CrossOrigin(origins = "*")
 public class BorrarController {
     PersonRepository personRepo;
     EducationRepository educationRepo;
@@ -23,14 +26,16 @@ public class BorrarController {
     AdminRepository adminRepo;
     ContactRepository contactRepo;
     ProyectRepository proyectRepo;
+    MessageRepository messageRepo;
 
-    public BorrarController(PersonRepository _personRepo, EducationRepository _educactionRepo, AboutRepository _aboutRepo, AdminRepository _adminRepo, ContactRepository _contactRepo, ProyectRepository _proyectRepo) {
+    public BorrarController(PersonRepository _personRepo, EducationRepository _educactionRepo, AboutRepository _aboutRepo, AdminRepository _adminRepo, ContactRepository _contactRepo, ProyectRepository _proyectRepo, MessageRepository _messageRepo) {
         personRepo = _personRepo;
         educationRepo = _educactionRepo;
         aboutRepo = _aboutRepo;
         adminRepo = _adminRepo;
         contactRepo = _contactRepo;
         proyectRepo = _proyectRepo;
+        messageRepo = _messageRepo;
     }
     
 
@@ -105,6 +110,19 @@ public class BorrarController {
         Long id = Long.parseLong(idString);
         try {
             proyectRepo.deleteById(id);
+            log.info("Borrado");
+            return "redirect:/admin/mostrar.html";
+        } catch(Exception e) {
+            log.error("ERROR BORRANDO", e);
+            return "redirect:/admin/mostrar.html";
+        }
+    }
+
+    @GetMapping("/message/{idString}")
+    public String borrarMessage(@PathVariable String idString){
+        Long id = Long.parseLong(idString);
+        try {
+            messageRepo.deleteById(id);
             log.info("Borrado");
             return "redirect:/admin/mostrar.html";
         } catch(Exception e) {

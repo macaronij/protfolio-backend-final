@@ -12,7 +12,7 @@ import lombok.Data;
 public class Education {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long Id;
+    private Long id;
     
     private String foto;
     private String titulo;
