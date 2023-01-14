@@ -19,16 +19,18 @@ public class Proyect {
     private String titulo;
     private String texto;
     private String enlace;
+    private String fecha;
 
     @ManyToOne
     private Person persona;
 
-    public Proyect(String foto, String titulo, String texto, String enlace, Person persona) {
+    public Proyect(String foto, String titulo, String texto, String enlace,  String fecha, Person persona) {
         this.foto = foto;
         this.titulo = titulo;
         this.texto = texto;
         this.persona = persona;
         this.enlace = enlace;
+        this.fecha = fecha;
     }
 
     public Proyect() {

@@ -6,6 +6,7 @@ basededatos\portfolio3\Repository\EducationRepository.class
 basededatos\portfolio3\Model\Admin.class
 basededatos\portfolio3\Controller\BorrarController.class
 basededatos\portfolio3\Repository\PersonRepository.class
+basededatos\portfolio3\Controller\EditandoController.class
 basededatos\portfolio3\Repository\ContactRepository.class
 basededatos\portfolio3\Model\LoginData.class
 basededatos\portfolio3\Repository\ProyectRepository.class

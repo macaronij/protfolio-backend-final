@@ -44,16 +44,6 @@ public class cargandoController {
         messageRepo = _messageRepo;
     }
 
-    // @GetMapping(value="/persona")
-    // public String cargaPersona(String nombre) {
-    //     if (nombre == null || nombre.isEmpty()) {
-    //         log.info("no se encontro un nombre para cargar, volviendo a mostrar.html");
-    //         return "redirect:/admin/mostrar.html";
-    //     }
-    //     log.info("Guardando Persona "+nombre+" en la base de datos PERSON");
-    //     personRepo.save(new Person(nombre));
-    //     return "redirect:/admin/mostrar.html";
-    // }
 
     @PostMapping("/educacion")
     public Boolean cargaEducacion(@RequestBody Education datos) {
@@ -64,7 +54,7 @@ public class cargandoController {
             Person persona = personRepo.findById(datos.getId()).get();
             log.info("Cargando EDUCACION de Persona: "+persona.getNombre());
             log.info("foto: "+datos.getFoto()+" titulo: "+datos.getTitulo()+" datos: "+datos.getTexto()+" persona: "+ persona.getNombre());
-            Education edu = new Education(datos.getFoto(), datos.getTitulo(),datos.getTexto(), persona);
+            Education edu = new Education(datos.getFoto(), datos.getTitulo(),datos.getTexto(), datos.getFecha(), persona);
             log.info("objeto edu creado");
             educationRepo.save(edu);
         } else {
@@ -103,20 +93,6 @@ public class cargandoController {
         return true;
     }
 
-    // @GetMapping("/contact")
-    // public String cargaContact(String telefono, String direccion, String email, String profesion, String foto, String idPersona) {
-    //     log.info("Cargando CONTACT de ID: "+idPersona);
-    //     Long id = Long.parseLong(idPersona);
-    //     if (personRepo.existsById(id)) {
-    //         Person persona = personRepo.findById(id).get();
-    //         log.info("Cargando COPNTACT de Persona: "+persona.getNombre());
-    //         contactRepo.save(new Contact(telefono, direccion, email, profesion, foto, persona));
-    //     } else {
-    //         log.info("ID: "+idPersona+" no encontrado en tabla persona");
-    //         return "redirect:/admin/errorpersona.html";
-    //     }
-    //     return "redirect:/admin/mostrar.html";
-    // }
 
     @PostMapping("/proyect")
     public Boolean cargaPro(@RequestBody Proyect datos) {
@@ -124,7 +100,7 @@ public class cargandoController {
         if (personRepo.existsById(datos.getId())) {
             Person persona = personRepo.findById(datos.getId()).get();
             log.info("Cargando PROYECTO de Persona: "+persona.getNombre());
-            proyectRepo.save(new Proyect(datos.getFoto(), datos.getTitulo(), datos.getTexto(), datos.getEnlace(), persona));
+            proyectRepo.save(new Proyect(datos.getFoto(), datos.getTitulo(), datos.getTexto(), datos.getEnlace(),datos.getFecha(), persona));
         } else {
             log.info("ID: "+datos.getId()+" no encontrado en tabla persona");
             return false;
