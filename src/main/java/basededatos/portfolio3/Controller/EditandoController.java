@@ -30,8 +30,10 @@ public class EditandoController {
     @PostMapping("/education/{idLinea}")
     public Boolean editarEducacion(@RequestBody Education datos, @PathVariable String idLinea){
         log.info("Editando EDUCACION");
+        log.info("El ide de linea es: "+idLinea);
         Long id = Long.parseLong(idLinea);
         if (educationRepo.findById(id).isPresent()) {
+            log.info("encontre el ID en educacion");
             Education edu = educationRepo.findById(id).get();
             edu.setFoto(datos.getFoto());
             edu.setTitulo(datos.getTitulo());
@@ -48,8 +50,10 @@ public class EditandoController {
     @PostMapping("/proyect/{idLinea}")
     public Boolean editarProyecto(@RequestBody Proyect datos, @PathVariable String idLinea){
         log.info("Editando EDUCACION");
+        log.info("El ide de linea es: "+idLinea);
         Long id = Long.parseLong(idLinea);
-        if (educationRepo.findById(id).isPresent()) {
+        if (proyectRepo.findById(id).isPresent()) {
+            log.info("encontre el ID en proyect");
             Proyect pro = proyectRepo.findById(id).get();
             pro.setFoto(datos.getFoto());
             pro.setTitulo(datos.getTitulo());
