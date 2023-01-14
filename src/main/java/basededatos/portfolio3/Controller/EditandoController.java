@@ -1,6 +1,7 @@
 package basededatos.portfolio3.Controller;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/cargando", produces="application/json")
+@RequestMapping(path = "/editando", produces="application/json")
 @CrossOrigin(origins = "*")
 public class EditandoController {
 
@@ -26,9 +27,7 @@ public class EditandoController {
         proyectRepo = _proyectRepo;
     }
 
-
-
-    @PostMapping("/editando/education/{idString}")
+    @PostMapping("/education/{idString}")
     public Boolean editarEducacion(@RequestBody Education datos){
         log.info("Editando EDUCACION");
         Long id = datos.getId();
@@ -46,10 +45,10 @@ public class EditandoController {
         }
     }
 
-    @PostMapping("/editando/proyect/{idString}")
-    public Boolean editarProyecto(@RequestBody Proyect datos){
+    @PostMapping("/proyect/{idLinea}")
+    public Boolean editarProyecto(@RequestBody Proyect datos, @PathVariable String idLinea){
         log.info("Editando EDUCACION");
-        Long id = datos.getId();
+        Long id = Long.parseLong(idLinea);
         if (educationRepo.findById(id).isPresent()) {
             Proyect pro = proyectRepo.findById(id).get();
             pro.setFoto(datos.getFoto());
