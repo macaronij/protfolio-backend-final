@@ -27,10 +27,10 @@ public class EditandoController {
         proyectRepo = _proyectRepo;
     }
 
-    @PostMapping("/education/{idString}")
-    public Boolean editarEducacion(@RequestBody Education datos){
+    @PostMapping("/education/{idLinea}")
+    public Boolean editarEducacion(@RequestBody Education datos, @PathVariable String idLinea){
         log.info("Editando EDUCACION");
-        Long id = datos.getId();
+        Long id = Long.parseLong(idLinea);
         if (educationRepo.findById(id).isPresent()) {
             Education edu = educationRepo.findById(id).get();
             edu.setFoto(datos.getFoto());
